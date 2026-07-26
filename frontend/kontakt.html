@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StyrkansHus | Kontakta oss</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="nav-row">
+    <a class="brand" href="index.html">
+      <img src="images/logo.png" alt="StyrkansHus logotyp">
+      StyrkansHus
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-label="Öppna meny">☰</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Hem</a></li>
+      <li><a href="om-oss.html">Om oss</a></li>
+      <li><a href="evenemang.html">Kommande evenemang</a></li>
+      <li><a href="sponsorer.html">Sponsorer</a></li>
+      <li><a href="stod-oss.html">Stödj oss</a></li>
+      <li><a href="kontakt.html" aria-current="page">Kontakta oss</a></li>
+    </ul>
+  </div>
+</header>
+
+<main>
+  <section style="padding-top:56px;">
+    <div class="wrap">
+      <p class="eyebrow">Hör av dig</p>
+      <h1>Kontakta oss</h1>
+      <p>Har du frågor, vill engagera dig eller bara prata? Vi finns här.</p>
+
+      <div class="grid grid-2" style="margin-top:32px; align-items:start;">
+        <div class="card">
+          <h3>Skriv till oss</h3>
+          <!--
+            Wired to Web3Forms so this static site can still send email
+            without a backend. To activate:
+            1) Go to https://web3forms.com/ and enter the destination
+               email address, you'll get an access key by email.
+            2) Paste that key into the hidden "access_key" input below,
+               replacing YOUR_ACCESS_KEY_HERE.
+          -->
+          <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+            <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
+            <input type="hidden" name="subject" value="Nytt meddelande från styrkanshus.se">
+            <input type="hidden" name="from_name" value="StyrkansHus webbformulär">
+            <input type="text" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+
+            <label for="name">Namn</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">E-post</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="message">Meddelande</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+
+            <button type="submit" class="button">Skicka meddelande</button>
+            <p id="form-status" role="status" style="margin-top:14px;"></p>
+          </form>
+        </div>
+        <div class="card">
+          <h3>Kontaktuppgifter</h3>
+          <p><strong>E-post:</strong> <span class="todo-inline">[fyll i]</span></p>
+          <p><strong>Telefon:</strong> <span class="todo-inline">[fyll i]</span></p>
+          <p><strong>Adress:</strong> <span class="todo-inline">[fyll i]</span></p>
+          <div class="todo">
+            <p class="eyebrow">Att fylla i</p>
+            <p style="margin-bottom:0;">Lägg till riktiga kontaktuppgifter och koppla formuläret till en tjänst som Formspree (se kommentar i koden).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <a class="brand" href="index.html" style="color:#fff;">
+        <img src="images/logo.png" alt="StyrkansHus logotyp">
+        StyrkansHus
+      </a>
+      <p style="color:#cfc3e8; margin-top:12px;">En politiskt och religiöst obunden förening för alla som är direkt eller indirekt drabbade av cancer eller annan allvarlig sjukdom.</p>
+    </div>
+    <div>
+      <h3>Sidor</h3>
+      <ul>
+        <li><a href="om-oss.html">Om oss</a></li>
+        <li><a href="evenemang.html">Kommande evenemang</a></li>
+        <li><a href="sponsorer.html">Sponsorer</a></li>
+        <li><a href="stod-oss.html">Stödj oss</a></li>
+        <li><a href="kontakt.html">Kontakta oss</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Kontakt</h3>
+      <ul>
+        <li>E-post: <span class="todo-inline">[fyll i]</span></li>
+        <li>Adress: <span class="todo-inline">[fyll i]</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    &copy; 2026 StyrkansHus
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
