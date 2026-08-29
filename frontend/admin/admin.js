@@ -218,10 +218,11 @@ function renderRows() {
 
 function renderEditor() {
   const tabsHtml = Object.entries(SECTIONS)
-    .map(
-      ([key, config]) => `
-      <button type="button" class="tab-button ${state.tab === key ? "active" : ""}" data-action="switch-tab" data-tab="${key}">${config.label}</button>`
-    )
+    .map(([key, config]) => {
+      const selected = state.tab === key;
+      return `
+      <button type="button" id="tab-${key}" class="tab-button ${selected ? "active" : ""}" role="tab" aria-selected="${selected}" aria-controls="section-rows" data-action="switch-tab" data-tab="${key}">${config.label}</button>`;
+    })
     .join("");
 
   root.innerHTML = `
@@ -237,15 +238,15 @@ function renderEditor() {
         </div>
       </div>
 
-      <div class="admin-tabs">${tabsHtml}</div>
+      <div class="admin-tabs" role="tablist">${tabsHtml}</div>
 
-      <div id="section-rows" class="mt-lg">${renderRows()}</div>
+      <div id="section-rows" class="mt-lg" role="tabpanel" aria-labelledby="tab-${state.tab}">${renderRows()}</div>
 
       <div class="hero-actions">
         <button type="button" class="button secondary small" data-action="add-row">${SECTIONS[state.tab].addLabel}</button>
         <button type="button" class="button small" data-action="save-section">Spara ${SECTIONS[state.tab].label.toLowerCase()}</button>
       </div>
-      <p id="admin-status" class="mt-sm"></p>
+      <p id="admin-status" class="mt-sm" role="status"></p>
     </div>`;
 }
 

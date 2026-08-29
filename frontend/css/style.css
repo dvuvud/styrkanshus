@@ -7,6 +7,7 @@
    ============================================================ */
 :root {
   --color-bg: #faf8f5;
+  --color-bg-rgb: 250, 248, 245; /* same value as --color-bg, for use in rgba() */
   --color-paper: #ffffff;
   --color-ink: #2b2a33;
   --color-ink-soft: #5a5866;
@@ -17,6 +18,10 @@
   --color-lavender-light: #e6dcf5;
   --color-lavender-pale: #f4eefb;
   --color-line: #e6e1d8;
+  --color-footer-ink: #eee7f7;
+  --color-footer-tagline: #cfc3e8;
+  --color-error: #a3312f;
+  --color-success: #2c6e49;
 
   --font-display: "Fraunces", "Iowan Old Style", serif;
   --font-body: "Karla", "Segoe UI", sans-serif;
@@ -84,7 +89,7 @@ p { margin: 0 0 1em; color: var(--color-ink-soft); max-width: 62ch; }
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(250, 248, 245, 0.92);
+  background: rgba(var(--color-bg-rgb), 0.92);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--color-line);
 }
@@ -147,7 +152,11 @@ p { margin: 0 0 1em; color: var(--color-ink-soft); max-width: 62ch; }
   font-size: 1.1rem;
 }
 
-@media (max-width: 780px) {
+/* Six links plus the wordmark stop fitting on one row well before 780px
+   (closer to ~900px with "Kommande evenemang" in the mix) — switch to the
+   hamburger menu early enough that the row never has to overflow or wrap
+   mid-line. */
+@media (max-width: 960px) {
   .nav-toggle { display: inline-block; }
   .nav-links {
     display: none;
@@ -179,7 +188,7 @@ p { margin: 0 0 1em; color: var(--color-ink-soft); max-width: 62ch; }
   align-items: center;
   gap: 8px;
   background: var(--color-lavender);
-  color: #fff !important;
+  color: var(--color-paper) !important;
   border: none;
   padding: 13px 26px;
   border-radius: var(--radius-sm);
@@ -197,7 +206,7 @@ p { margin: 0 0 1em; color: var(--color-ink-soft); max-width: 62ch; }
   color: var(--color-navy) !important;
   border: 1.5px solid var(--color-navy);
 }
-.button.secondary:hover { background: var(--color-navy); color: #fff !important; }
+.button.secondary:hover { background: var(--color-navy); color: var(--color-paper) !important; }
 
 /* ---------- Sections ---------- */
 section { padding: 56px 0; }
@@ -300,12 +309,12 @@ section { padding: 56px 0; }
 /* ---------- Footer ---------- */
 .site-footer {
   background: var(--color-navy-deep);
-  color: #eee7f7;
+  color: var(--color-footer-ink);
   padding: 48px 0 28px;
 }
-.site-footer a { color: #fff; }
-.site-footer .brand { color: #fff; }
-.site-footer .tagline { color: #cfc3e8; margin-top: 12px; }
+.site-footer a { color: var(--color-paper); }
+.site-footer .brand { color: var(--color-paper); }
+.site-footer .tagline { color: var(--color-footer-tagline); margin-top: 12px; }
 .site-footer .wrap {
   display: grid;
   grid-template-columns: 1.4fr 1fr 1fr;
@@ -314,7 +323,7 @@ section { padding: 56px 0; }
 @media (max-width: 780px) {
   .site-footer .wrap { grid-template-columns: 1fr; }
 }
-.site-footer h3 { color: #fff; font-size: 1rem; }
+.site-footer h3 { color: var(--color-paper); font-size: 1rem; }
 .site-footer ul { list-style: none; margin: 0; padding: 0; }
 .site-footer li { margin-bottom: 8px; }
 .footer-bottom {
@@ -429,5 +438,5 @@ input, textarea {
 .button.small { padding: 9px 18px; font-size: 0.9rem; }
 .button[disabled] { opacity: 0.6; cursor: not-allowed; transform: none !important; }
 #admin-status { min-height: 1.4em; }
-#admin-status.error { color: #a3312f; }
-#admin-status.success { color: #2c6e49; }
+#admin-status.error { color: var(--color-error); }
+#admin-status.success { color: var(--color-success); }
