@@ -89,21 +89,27 @@ added to it, which is the error you ran into.
      (e.g. `https://styrkanshus.<your-subdomain>.workers.dev/admin/`)
    - Save, then copy the **Client ID** and generate a **Client secret**.
 
-3. **Set variables on the Worker** (this is the step that failed before —
-   it works now that the Worker has actual code, not just static assets)
-   - Cloudflare dashboard → Workers & Pages → this Worker → **Settings →
-     Variables and Secrets** → add:
-     - `GITHUB_CLIENT_ID` — plain text, from step 2
-     - `GITHUB_CLIENT_SECRET` — type **Secret** (encrypted), paste the
-       client secret from step 2
-   - Save/redeploy so `worker.js` can read them.
+3. **Set `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`** — these go in two
+   different places, not both in the dashboard:
+   - `GITHUB_CLIENT_ID` (from step 2) goes in **`wrangler.toml`**, in the
+     `[vars]` block, committed to git. It's not secret — it's already
+     public in the GitHub login URL. This matters because Workers Builds
+     runs `wrangler deploy` on every push, which treats `wrangler.toml` as
+     the *complete* set of plain variables — anything added only through
+     the dashboard gets wiped on the next deploy. (If you added it via the
+     dashboard and it kept disappearing, this is why.)
+   - `GITHUB_CLIENT_SECRET` (from step 2) goes in the **Cloudflare
+     dashboard**: Workers & Pages → this Worker → Settings → Variables and
+     Secrets → add it with type **Secret**. Secrets aren't touched by
+     future deploys, so this one really does only need setting once.
 
 4. **Fill in `frontend/js/config.js`**
    ```js
    githubOAuthClientId: "<client id from step 2>",
    ```
-   This is the only place the client ID needs to be duplicated — it's not
-   secret (it's already public in the GitHub login URL).
+   Same value as `GITHUB_CLIENT_ID` in `wrangler.toml` — both need it
+   (the frontend uses it to build the GitHub login URL; the Worker uses it
+   again server-side to complete the token exchange).
 
 5. Add any board members who should be able to publish changes as
    collaborators on this GitHub repository.

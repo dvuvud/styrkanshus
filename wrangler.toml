@@ -6,6 +6,17 @@ compatibility_date = "2026-08-29"
 directory = "./frontend"
 binding = "ASSETS"
 
-# GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET are not set here — set them in
-# the Cloudflare dashboard instead: Workers & Pages → this Worker →
-# Settings → Variables and Secrets. See README.md.
+# Not secret — the client ID is already public (it's visible in the GitHub
+# login URL), so it's safe to commit here. This has to be declared in
+# wrangler.toml, not added as a dashboard variable: Workers Builds runs
+# `wrangler deploy` on every push, which treats this file as the complete
+# set of plain vars and wipes out anything added through the dashboard
+# that isn't listed here. Must match frontend/js/config.js's
+# githubOAuthClientId exactly — same OAuth App, both places.
+[vars]
+GITHUB_CLIENT_ID = "Ov23lizJ4GLWWn3ff2Lj"
+
+# GITHUB_CLIENT_SECRET is NOT set here — secrets never go in this file or
+# in git. That one's a real secret, so the dashboard/CLI is the right
+# place for it (Settings → Variables and Secrets → type "Secret"), and
+# unlike plain vars, secrets aren't touched by future deploys.
