@@ -6,6 +6,7 @@
 <title>StyrkansHus | Kommande evenemang</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="images/favicon.png">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,7 +14,7 @@
 <header class="site-header">
   <div class="nav-row">
     <a class="brand" href="index.html">
-      <img src="images/logo.png" alt="StyrkansHus logotyp">
+      <img src="images/logo-icon.png" alt="StyrkansHus logotyp" class="brand-mark">
       StyrkansHus
     </a>
     <button class="nav-toggle" aria-expanded="false" aria-label="Öppna meny">☰</button>
@@ -29,33 +30,14 @@
 </header>
 
 <main>
-  <section style="padding-top:56px;">
+  <section class="page-hero">
     <div class="wrap">
       <p class="eyebrow">Kalender</p>
       <h1>Kommande evenemang</h1>
       <p>Här samlar vi träffar, föreläsningar, studiecirklar och kulturarrangemang som anordnas i StyrkansHus.</p>
 
-      <div class="todo" style="margin-bottom:28px;">
-        <p class="eyebrow">Att fylla i</p>
-        <p style="margin-bottom:0;">Ersätt exempelkorten nedan med riktiga evenemang: datum, tid, plats och en kort beskrivning för varje.</p>
-      </div>
-
-      <div class="grid grid-3">
-        <div class="card">
-          <p class="eyebrow">[Datum]</p>
-          <h3>[Namn på evenemang]</h3>
-          <p>[Kort beskrivning av vad som händer, var och för vem.]</p>
-        </div>
-        <div class="card">
-          <p class="eyebrow">[Datum]</p>
-          <h3>[Namn på evenemang]</h3>
-          <p>[Kort beskrivning av vad som händer, var och för vem.]</p>
-        </div>
-        <div class="card">
-          <p class="eyebrow">[Datum]</p>
-          <h3>[Namn på evenemang]</h3>
-          <p>[Kort beskrivning av vad som händer, var och för vem.]</p>
-        </div>
+      <div id="events-list" class="grid grid-3 mt-lg">
+        <p class="empty-state">Laddar evenemang…</p>
       </div>
     </div>
   </section>
@@ -64,11 +46,11 @@
 <footer class="site-footer">
   <div class="wrap">
     <div>
-      <a class="brand" href="index.html" style="color:#fff;">
-        <img src="images/logo.png" alt="StyrkansHus logotyp">
+      <a class="brand" href="index.html">
+        <img src="images/logo-icon.png" alt="StyrkansHus logotyp" class="brand-mark">
         StyrkansHus
       </a>
-      <p style="color:#cfc3e8; margin-top:12px;">En politiskt och religiöst obunden förening för alla som är direkt eller indirekt drabbade av cancer eller annan allvarlig sjukdom.</p>
+      <p class="tagline">En politiskt och religiöst obunden förening för alla som är direkt eller indirekt drabbade av cancer eller annan allvarlig sjukdom.</p>
     </div>
     <div>
       <h3>Sidor</h3>
@@ -83,8 +65,7 @@
     <div>
       <h3>Kontakt</h3>
       <ul>
-        <li>E-post: <span class="todo-inline">[fyll i]</span></li>
-        <li>Adress: <span class="todo-inline">[fyll i]</span></li>
+        <li><a href="kontakt.html">Kontakta oss</a></li>
       </ul>
     </div>
   </div>
@@ -93,6 +74,7 @@
   </div>
 </footer>
 
+<script src="js/config.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

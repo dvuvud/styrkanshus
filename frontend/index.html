@@ -7,6 +7,7 @@
 <meta name="description" content="StyrkansHus är en mötesplats för personer och familjer som är direkt eller indirekt drabbade av cancer eller annan allvarlig sjukdom.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="images/favicon.png">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -14,7 +15,7 @@
 <header class="site-header">
   <div class="nav-row">
     <a class="brand" href="index.html">
-      <img src="images/logo.png" alt="StyrkansHus logotyp">
+      <img src="images/logo-icon.png" alt="StyrkansHus logotyp" class="brand-mark">
       StyrkansHus
     </a>
     <button class="nav-toggle" aria-expanded="false" aria-label="Öppna meny">☰</button>
@@ -31,41 +32,32 @@
 
 <main>
   <section class="hero">
-    <div class="wrap">
-      <div>
-        <p class="eyebrow">En mötesplats för styrka och stöd</p>
-        <h1>Ett hus att komma till, när livet blir tungt.</h1>
-        <p>StyrkansHus är en allmännyttig ideell förening som bildades 2026 genom att flera patientföreningar i Västmanland slog sig samman. Vi finns för alla som är direkt eller indirekt drabbade av cancer eller barn med annan allvarlig sjukdom.</p>
-        <div style="display:flex; gap:14px; flex-wrap:wrap; margin-top: 24px;">
-          <a class="button" href="stod-oss.html">Stödj oss</a>
-          <a class="button secondary" href="om-oss.html">Läs om oss</a>
-        </div>
-      </div>
-      <div class="hero-art">
-        <img src="images/logo.png" alt="StyrkansHus logotyp: ett hus som håller ett hjärta">
+    <div class="wrap hero-content">
+      <p class="eyebrow">En mötesplats för styrka och stöd</p>
+      <h1>Ett hus att komma till, när livet blir tungt.</h1>
+      <p>StyrkansHus är en allmännyttig ideell förening som bildades 2026 genom att flera patientföreningar i Västmanland slog sig samman. Vi finns för alla som är direkt eller indirekt drabbade av cancer eller barn med annan allvarlig sjukdom.</p>
+      <div class="hero-actions">
+        <a class="button" href="stod-oss.html">Stödj oss</a>
+        <a class="hero-link" href="om-oss.html">Läs om oss →</a>
       </div>
     </div>
   </section>
-
-  <svg class="roofline" viewBox="0 0 1080 48" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0 40 C 260 40, 340 8, 540 8 C 740 8, 820 40, 1080 40" />
-  </svg>
 
   <section class="section-alt">
     <div class="wrap">
       <p class="eyebrow">Vad vi gör</p>
       <h2>Stöd, konvalescens och återhämtning</h2>
       <p>Föreningen erbjuder stöd i form av samtal, möten, fysiska aktiviteter, föreläsningar, studiecirklar och kulturarrangemang. Allt drivs av volontärer med egen erfarenhet av cancer eller annan allvarlig sjukdom.</p>
-      <div class="grid grid-3" style="margin-top: 28px;">
-        <div class="card">
+      <div class="feature-list mt-lg">
+        <div class="feature-item">
           <h3>Samtal &amp; möten</h3>
           <p>En plats att prata, lyssna och känna igen sig, tillsammans med andra i liknande situation.</p>
         </div>
-        <div class="card">
+        <div class="feature-item">
           <h3>Aktiviteter &amp; föreläsningar</h3>
           <p>Fysiska aktiviteter, studiecirklar och föreläsningar som stärker både kropp och sinne.</p>
         </div>
-        <div class="card">
+        <div class="feature-item">
           <h3>Öppet för alla</h3>
           <p>Verksamheten vänder sig till alla drabbade och ställer inga krav på medlemskap i någon förening.</p>
         </div>
@@ -73,16 +65,15 @@
     </div>
   </section>
 
-  <svg class="roofline flip" viewBox="0 0 1080 48" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0 40 C 260 40, 340 8, 540 8 C 740 8, 820 40, 1080 40" />
-  </svg>
-
   <section>
     <div class="wrap">
-      <div class="todo">
-        <p class="eyebrow">Att fylla i</p>
-        <h3 style="margin-top:6px;">Kommande evenemang</h3>
-        <p style="margin-bottom:0;">Här kan en kort lista med de närmaste evenemangen visas när de är klara. Se fliken <a href="evenemang.html">Kommande evenemang</a>.</p>
+      <p class="eyebrow">Kalender</p>
+      <h2>Kommande evenemang</h2>
+      <div id="events-preview" class="grid grid-3 mt-lg">
+        <p class="empty-state">Laddar evenemang…</p>
+      </div>
+      <div class="mt-lg">
+        <a class="button secondary" href="evenemang.html">Se alla evenemang</a>
       </div>
     </div>
   </section>
@@ -91,11 +82,11 @@
 <footer class="site-footer">
   <div class="wrap">
     <div>
-      <a class="brand" href="index.html" style="color:#fff;">
-        <img src="images/logo.png" alt="StyrkansHus logotyp">
+      <a class="brand" href="index.html">
+        <img src="images/logo-icon.png" alt="StyrkansHus logotyp" class="brand-mark">
         StyrkansHus
       </a>
-      <p style="color:#cfc3e8; margin-top:12px;">En politiskt och religiöst obunden förening för alla som är direkt eller indirekt drabbade av cancer eller annan allvarlig sjukdom.</p>
+      <p class="tagline">En politiskt och religiöst obunden förening för alla som är direkt eller indirekt drabbade av cancer eller annan allvarlig sjukdom.</p>
     </div>
     <div>
       <h3>Sidor</h3>
@@ -110,8 +101,7 @@
     <div>
       <h3>Kontakt</h3>
       <ul>
-        <li>E-post: <span class="todo-inline">[fyll i]</span></li>
-        <li>Adress: <span class="todo-inline">[fyll i]</span></li>
+        <li><a href="kontakt.html">Kontakta oss</a></li>
       </ul>
     </div>
   </div>
@@ -120,6 +110,7 @@
   </div>
 </footer>
 
+<script src="js/config.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

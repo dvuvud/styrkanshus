@@ -6,6 +6,7 @@
 <title>StyrkansHus | Stödj oss</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="images/favicon.png">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,7 +14,7 @@
 <header class="site-header">
   <div class="nav-row">
     <a class="brand" href="index.html">
-      <img src="images/logo.png" alt="StyrkansHus logotyp">
+      <img src="images/logo-icon.png" alt="StyrkansHus logotyp" class="brand-mark">
       StyrkansHus
     </a>
     <button class="nav-toggle" aria-expanded="false" aria-label="Öppna meny">☰</button>
@@ -29,40 +30,32 @@
 </header>
 
 <main>
-  <section style="padding-top:56px;">
+  <section class="page-hero">
     <div class="wrap">
       <p class="eyebrow">Bli en del av StyrkansHus</p>
       <h1>Stödj oss</h1>
       <p>Ditt stöd hjälper oss att fortsätta erbjuda samtal, möten och aktiviteter för alla som är direkt eller indirekt drabbade av cancer eller annan allvarlig sjukdom.</p>
 
-      <div class="todo" style="margin-bottom:28px;">
-        <p class="eyebrow">Att fylla i</p>
-        <p style="margin-bottom:0;">Fyll i faktiska uppgifter för Swish/bankgiro och eventuellt medlemskap nedan. Texten är just nu platshållare.</p>
-      </div>
-
-      <div class="grid grid-3">
+      <!-- Swish/bankgiro numbers go in the first card below once confirmed by the board. -->
+      <div class="grid grid-3 mt-lg">
         <div class="card">
           <h3>Skänk en gåva</h3>
-          <p>[Swish-nummer / bankgironummer läggs till här.]</p>
+          <p>Swish- och bankgironummer publiceras här inom kort. Kontakta oss så hjälper vi dig att skänka en gåva redan idag.</p>
         </div>
         <div class="card">
           <h3>Bli volontär</h3>
-          <p>[Kort text om hur man engagerar sig som volontär.]</p>
+          <p>Vi söker alltid fler volontärer som vill bidra med tid, engagemang eller egen erfarenhet. Hör av dig så berättar vi mer om hur du kan bidra.</p>
         </div>
         <div class="card">
           <h3>Bli medlem</h3>
-          <p>[Kort text om medlemskap, om föreningen erbjuder det.]</p>
+          <p>Vill du bli medlem i StyrkansHus? Kontakta oss så berättar vi mer om vad medlemskapet innebär.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <svg class="roofline" viewBox="0 0 1080 48" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0 40 C 260 40, 340 8, 540 8 C 740 8, 820 40, 1080 40" />
-  </svg>
-
   <section class="section-alt">
-    <div class="wrap" style="max-width:640px;">
+    <div class="wrap wrap-narrow">
       <h2>Har du frågor om att stödja oss?</h2>
       <p>Hör gärna av dig så berättar vi mer om hur du kan bidra.</p>
       <a class="button" href="kontakt.html">Kontakta oss</a>
@@ -73,11 +66,11 @@
 <footer class="site-footer">
   <div class="wrap">
     <div>
-      <a class="brand" href="index.html" style="color:#fff;">
-        <img src="images/logo.png" alt="StyrkansHus logotyp">
+      <a class="brand" href="index.html">
+        <img src="images/logo-icon.png" alt="StyrkansHus logotyp" class="brand-mark">
         StyrkansHus
       </a>
-      <p style="color:#cfc3e8; margin-top:12px;">En politiskt och religiöst obunden förening för alla som är direkt eller indirekt drabbade av cancer eller annan allvarlig sjukdom.</p>
+      <p class="tagline">En politiskt och religiöst obunden förening för alla som är direkt eller indirekt drabbade av cancer eller annan allvarlig sjukdom.</p>
     </div>
     <div>
       <h3>Sidor</h3>
@@ -92,8 +85,7 @@
     <div>
       <h3>Kontakt</h3>
       <ul>
-        <li>E-post: <span class="todo-inline">[fyll i]</span></li>
-        <li>Adress: <span class="todo-inline">[fyll i]</span></li>
+        <li><a href="kontakt.html">Kontakta oss</a></li>
       </ul>
     </div>
   </div>

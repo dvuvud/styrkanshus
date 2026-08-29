@@ -6,6 +6,7 @@
 <title>StyrkansHus | Om oss</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="images/favicon.png">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,7 +14,7 @@
 <header class="site-header">
   <div class="nav-row">
     <a class="brand" href="index.html">
-      <img src="images/logo.png" alt="StyrkansHus logotyp">
+      <img src="images/logo-icon.png" alt="StyrkansHus logotyp" class="brand-mark">
       StyrkansHus
     </a>
     <button class="nav-toggle" aria-expanded="false" aria-label="Öppna meny">☰</button>
@@ -29,7 +30,7 @@
 </header>
 
 <main>
-  <section style="padding-top:56px;">
+  <section class="page-hero">
     <div class="wrap">
       <p class="eyebrow">Om oss</p>
       <h1>StyrkansHus</h1>
@@ -41,61 +42,12 @@
     </div>
   </section>
 
-  <svg class="roofline" viewBox="0 0 1080 48" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0 40 C 260 40, 340 8, 540 8 C 740 8, 820 40, 1080 40" />
-  </svg>
-
   <section class="section-alt">
     <div class="wrap">
       <p class="eyebrow">Styrelsen</p>
       <h2>Vilka sitter i styrelsen</h2>
-      <div class="card" style="margin-top:20px;">
-        <div class="board-member">
-          <div class="board-initial">EE</div>
-          <div>
-            <div class="role">Ordförande</div>
-            <div>Elisabet Nore Evertsson</div>
-          </div>
-        </div>
-        <div class="board-member">
-          <div class="board-initial">SZ</div>
-          <div>
-            <div class="role">Vice ordförande</div>
-            <div>Susanne Zeeck</div>
-          </div>
-        </div>
-        <div class="board-member">
-          <div class="board-initial">IA</div>
-          <div>
-            <div class="role">Sekreterare</div>
-            <div>Ingegerd Ahl</div>
-          </div>
-        </div>
-        <div class="board-member">
-          <div class="board-initial">RK</div>
-          <div>
-            <div class="role">Kassör</div>
-            <div>Robert Klinga</div>
-          </div>
-        </div>
-        <div class="board-member">
-          <div class="board-initial">ML</div>
-          <div>
-            <div class="role">Ledamot</div>
-            <div>Mats Lindgren</div>
-          </div>
-        </div>
-        <div class="board-member">
-          <div class="board-initial">KM</div>
-          <div>
-            <div class="role">Ledamot</div>
-            <div>Krister Medin</div>
-          </div>
-        </div>
-      </div>
-      <div class="todo" style="margin-top:24px;">
-        <p class="eyebrow">Att fylla i</p>
-        <p style="margin-bottom:0;">Bilder på styrelsens medlemmar kommer att läggas till här. Ersätt bokstavscirklarna ovan med foton när de kommer in.</p>
+      <div id="board-list" class="card mt-md">
+        <p>Laddar styrelsen…</p>
       </div>
     </div>
   </section>
@@ -104,11 +56,11 @@
 <footer class="site-footer">
   <div class="wrap">
     <div>
-      <a class="brand" href="index.html" style="color:#fff;">
-        <img src="images/logo.png" alt="StyrkansHus logotyp">
+      <a class="brand" href="index.html">
+        <img src="images/logo-icon.png" alt="StyrkansHus logotyp" class="brand-mark">
         StyrkansHus
       </a>
-      <p style="color:#cfc3e8; margin-top:12px;">En politiskt och religiöst obunden förening för alla som är direkt eller indirekt drabbade av cancer eller annan allvarlig sjukdom.</p>
+      <p class="tagline">En politiskt och religiöst obunden förening för alla som är direkt eller indirekt drabbade av cancer eller annan allvarlig sjukdom.</p>
     </div>
     <div>
       <h3>Sidor</h3>
@@ -123,8 +75,7 @@
     <div>
       <h3>Kontakt</h3>
       <ul>
-        <li>E-post: <span class="todo-inline">[fyll i]</span></li>
-        <li>Adress: <span class="todo-inline">[fyll i]</span></li>
+        <li><a href="kontakt.html">Kontakta oss</a></li>
       </ul>
     </div>
   </div>
