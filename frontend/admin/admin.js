@@ -5,9 +5,9 @@
 // Auth: GitHub OAuth (Authorization Code flow). The one step that can't
 // happen in the browser — exchanging the code for a token, since GitHub's
 // token endpoint has no CORS support — is delegated to a same-origin
-// Cloudflare Pages Function (see functions/api/oauth-token.js). Everything
-// else talks to api.github.com directly, which does support CORS for
-// authenticated requests.
+// route handled by the Cloudflare Worker itself (see /worker.js at the
+// repo root). Everything else talks to api.github.com directly, which
+// does support CORS for authenticated requests.
 //
 // Access control: anyone with a GitHub account can log in, but only
 // accounts with write access to this repository can actually publish —
@@ -144,7 +144,7 @@ function renderNotConfigured() {
     <div class="card admin-card text-center">
       <p class="eyebrow">StyrkansHus</p>
       <h1 style="font-size:1.6rem;">Admin ej konfigurerad</h1>
-      <p>Fyll i <code>githubOAuthClientId</code> i <code>frontend/js/config.js</code> och sätt <code>GITHUB_CLIENT_ID</code>/<code>GITHUB_CLIENT_SECRET</code> som miljövariabler på Cloudflare Pages-projektet för att aktivera inloggning. Se README.md.</p>
+      <p>Fyll i <code>githubOAuthClientId</code> i <code>frontend/js/config.js</code> och sätt <code>GITHUB_CLIENT_ID</code>/<code>GITHUB_CLIENT_SECRET</code> som variabler på Cloudflare Workern för att aktivera inloggning. Se README.md.</p>
     </div>`;
 }
 

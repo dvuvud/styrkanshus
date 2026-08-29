@@ -1,0 +1,11 @@
+name = "styrkanshus"
+main = "worker.js"
+compatibility_date = "2026-08-29"
+
+[assets]
+directory = "./frontend"
+binding = "ASSETS"
+
+# GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET are not set here — set them in
+# the Cloudflare dashboard instead: Workers & Pages → this Worker →
+# Settings → Variables and Secrets. See README.md.

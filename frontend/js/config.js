@@ -10,7 +10,7 @@ const SITE_CONFIG = {
   githubRepo: "styrkanshus",
 
   // GitHub OAuth App client ID. Only needed on the admin page (the token
-  // exchange itself happens in frontend/functions/api/oauth-token.js).
+  // exchange itself happens in worker.js, at the repo root).
   // Leave blank to keep the admin page disabled.
   githubOAuthClientId: "Ov23lizJ4GLWWn3ff2Lj",
 };

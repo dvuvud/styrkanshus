@@ -1,9 +1,13 @@
 # StyrkansHus website
 
-Plain HTML/CSS/JS, no build step or framework. Deploys to Cloudflare Pages.
+Plain HTML/CSS/JS, no build step or framework. Deploys as a single
+Cloudflare Worker: static files served straight from `frontend/`, plus one
+small bit of server-side code for the admin login.
 
 ## Structure
 ```
+worker.js            Worker entry point — serves frontend/ and handles /api/oauth-token
+wrangler.toml         Worker config: name, and the [assets] binding pointing at frontend/
 frontend/
   index.html         Hem
   om-oss.html         Om oss (board list reads board.json)
@@ -21,11 +25,10 @@ frontend/
   js/config.js        The one file you edit to activate the form and the admin login
   js/main.js          Nav toggle, contact form, events/board/sponsors rendering
   admin/              Hidden page (not linked anywhere) for editing all of the above in-browser
-  functions/api/
-    oauth-token.js     Cloudflare Pages Function — the server-side half of admin login (see below)
 ```
-No `.github/workflows` — Cloudflare Pages deploys by connecting straight to
-this GitHub repo (see below), and redeploys automatically on every push.
+No `.github/workflows` — Cloudflare's own **Workers Builds** connects
+straight to this GitHub repo (see below) and redeploys automatically on
+every push, both the site and the admin login's server-side piece together.
 
 ## Contact form
 Wired to Web3Forms and already active — the key lives in
@@ -56,41 +59,44 @@ repository, so add anyone who should be able to publish changes as a
 **collaborator on this repo** (Settings → Collaborators).
 
 ### One-time setup
-Cloudflare Pages only serves static files by default, so it can't run the
-server-side half of an OAuth login on its own — but it can run small
-serverless **Functions** alongside the site, which is exactly enough for
+A plain static-assets deployment can't run server-side code, so it can't do
 the one step GitHub requires off-browser: exchanging the login code for an
-access token. That's `frontend/functions/api/oauth-token.js` — it deploys
-automatically as part of the same Pages build, reachable at
-`/api/oauth-token` on your own domain (same-origin, no CORS needed).
-Everything else (reading/writing the JSON files and uploaded images) talks
-directly to api.github.com from the browser.
+access token (GitHub's token endpoint sends no CORS headers, so the browser
+can't call it directly either). `worker.js` handles that one route
+(`/api/oauth-token`) itself and serves every other request straight from
+`frontend/` via the `ASSETS` binding in `wrangler.toml` — same-origin, no
+CORS handling needed. This is why the project has to be a **Worker** (with
+a static-assets binding), not the older Pages product — a project that's
+static assets only, with no attached script, can't have variables/secrets
+added to it, which is the error you ran into.
 
-1. **Connect this repo to Cloudflare Pages**
-   - Cloudflare dashboard → Workers & Pages → Create → Pages → Connect to Git
-   - Pick this repository and branch (`main`)
-   - Build settings: framework preset **None**, build command **empty**,
-     build output directory **`frontend`**
-   - Deploy. You'll get a `*.pages.dev` URL; add a custom domain under the
-     project's **Custom domains** tab once you're happy with it (easy since
-     your DNS is on Cloudflare too).
+1. **Make sure the Worker has this repo's code**
+   - The Worker name in the Cloudflare dashboard must match `name` in
+     `wrangler.toml` (currently `styrkanshus`) — rename one or the other so
+     they match exactly.
+   - That Worker → **Settings → Builds → Connect** → pick this GitHub repo,
+     production branch `main`, root directory = repository root (where
+     `wrangler.toml` lives). Cloudflare will detect `wrangler.toml`
+     automatically and use `wrangler deploy`.
+   - Push to `main` (or trigger a manual deploy) once to confirm it builds.
 
 2. **Create a GitHub OAuth App**
    - GitHub → Settings → Developer settings → OAuth Apps → New OAuth App
-   - Homepage URL: your site's URL (e.g. `https://styrkanshus.pages.dev`,
-     or your custom domain once it's set up)
+   - Homepage URL: your Worker's URL (e.g. `https://styrkanshus.<your-subdomain>.workers.dev`,
+     or your custom domain once you've added one under the Worker's
+     **Settings → Domains & Routes**)
    - Authorization callback URL: the admin page's URL
-     (e.g. `https://styrkanshus.pages.dev/admin/`)
+     (e.g. `https://styrkanshus.<your-subdomain>.workers.dev/admin/`)
    - Save, then copy the **Client ID** and generate a **Client secret**.
 
-3. **Set environment variables on the Pages project**
-   - Cloudflare dashboard → Workers & Pages → this project → Settings →
-     Environment variables → add for the **Production** environment:
+3. **Set variables on the Worker** (this is the step that failed before —
+   it works now that the Worker has actual code, not just static assets)
+   - Cloudflare dashboard → Workers & Pages → this Worker → **Settings →
+     Variables and Secrets** → add:
      - `GITHUB_CLIENT_ID` — plain text, from step 2
-     - `GITHUB_CLIENT_SECRET` — click **Encrypt**, paste the client secret
-       from step 2
-   - Redeploy (or it'll pick these up on the next push) so the Function can
-     read them.
+     - `GITHUB_CLIENT_SECRET` — type **Secret** (encrypted), paste the
+       client secret from step 2
+   - Save/redeploy so `worker.js` can read them.
 
 4. **Fill in `frontend/js/config.js`**
    ```js
@@ -103,5 +109,5 @@ directly to api.github.com from the browser.
    collaborators on this GitHub repository.
 
 That's it — visiting `/admin/` now offers a "Logga in med GitHub" button.
-The client secret lives only in Cloudflare's encrypted environment
-variables, never in this repo.
+The client secret lives only in the Worker's encrypted variables, never in
+this repo.
