@@ -1,8 +1,32 @@
 [
-  { "name": "Elisabet Nore Evertsson", "role": "Ordförande", "photo": "" },
-  { "name": "Susanne Zeeck", "role": "Vice ordförande", "photo": "" },
-  { "name": "Ingegerd Ahl", "role": "Sekreterare", "photo": "" },
-  { "name": "Robert Klinga", "role": "Kassör", "photo": "" },
-  { "name": "Mats Lindgren", "role": "Ledamot", "photo": "" },
-  { "name": "Krister Medin", "role": "Ledamot", "photo": "" }
+  {
+    "name": "Elisabet Nore Evertsson",
+    "role": "Ordförande",
+    "photo": ""
+  },
+  {
+    "name": "Susanne Zeeck",
+    "role": "Vice ordförande",
+    "photo": ""
+  },
+  {
+    "name": "Ingegerd Ahl",
+    "role": "Sekreterare",
+    "photo": ""
+  },
+  {
+    "name": "Robert Klinga",
+    "role": "Kassör",
+    "photo": ""
+  },
+  {
+    "name": "Mats Lindgren",
+    "role": "Ledamot",
+    "photo": ""
+  },
+  {
+    "name": "Krister Medin",
+    "role": "Ledamot",
+    "photo": ""
+  }
 ]
