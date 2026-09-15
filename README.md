@@ -50,6 +50,13 @@ the JSON pointing at it. Replacing a photo uploads a new file rather than
 overwriting the old one, so an unused image occasionally gets left behind;
 harmless, just prune it from GitHub every so often if it bothers you.
 
+Board photos also get a crop editor: drag the preview to reposition it and
+use the zoom slider to get closer, so a photo that's framed wider than the
+circle doesn't cut off part of someone's face. That's stored as
+`photoZoom`/`photoX`/`photoY` alongside `photo` in `board.json` (all
+optional — a plain `photo` path with none of those still displays fine,
+just centered with no zoom).
+
 `frontend/admin/index.html` isn't linked from the site's navigation, but
 it's still a public URL once deployed (e.g. `https://<your-site>/admin/`) —
 `robots.txt` just keeps search engines from indexing it. Access is controlled

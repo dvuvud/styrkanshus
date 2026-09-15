@@ -111,11 +111,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       .join("")
       .toUpperCase();
 
-  const memberRow = (member) => `
+  const memberRow = (member) => {
+    const zoom = Number(member.photoZoom) > 0 ? Number(member.photoZoom) : 1;
+    const posX = Number.isFinite(Number(member.photoX)) ? Number(member.photoX) : 50;
+    const posY = Number.isFinite(Number(member.photoY)) ? Number(member.photoY) : 50;
+    return `
     <div class="board-member">
       ${
         member.photo
-          ? `<img class="board-photo" src="${escapeHtml(member.photo)}" alt="${escapeHtml(member.name || "")}">`
+          ? `<div class="board-photo"><img src="${escapeHtml(member.photo)}" alt="${escapeHtml(member.name || "")}" style="object-position:${posX}% ${posY}%; transform:scale(${zoom});"></div>`
           : `<div class="board-initial">${escapeHtml(initials(member.name))}</div>`
       }
       <div>
@@ -123,6 +127,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         <div>${escapeHtml(member.name || "")}</div>
       </div>
     </div>`;
+  };
 
   try {
     const response = await fetch("board.json", { cache: "no-store" });

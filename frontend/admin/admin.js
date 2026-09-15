@@ -39,7 +39,15 @@ const SECTIONS = {
     fields: [
       { key: "name", label: "Namn", type: "text", placeholder: "Namn" },
       { key: "role", label: "Roll", type: "text", placeholder: "t.ex. Ordförande" },
-      { key: "photo", label: "Foto", type: "image", dir: "images/board" },
+      {
+        key: "photo",
+        label: "Foto",
+        type: "image-crop",
+        dir: "images/board",
+        zoomKey: "photoZoom",
+        xKey: "photoX",
+        yKey: "photoY",
+      },
     ],
   },
   sponsors: {
@@ -130,6 +138,10 @@ function escapeHtml(value) {
   return div.innerHTML;
 }
 
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
 function setStatus(text, kind) {
   const status = document.querySelector("#admin-status");
   if (!status) return;
@@ -188,6 +200,44 @@ function fieldMarkup(tab, item, index, field) {
           <input type="file" accept="image/*" data-action="upload-image" data-tab="${tab}" data-field="${field.key}" data-index="${index}">
           ${item[`_${field.key}Uploading`] ? '<p class="upload-status">Laddar upp…</p>' : ""}
           ${item[field.key] ? `<button type="button" class="link-button" data-action="remove-image" data-tab="${tab}" data-field="${field.key}" data-index="${index}">Ta bort bild</button>` : ""}
+        </div>
+      </div>`;
+  }
+
+  if (field.type === "image-crop") {
+    const previewUrl =
+      item[`_${field.key}PreviewUrl`] ||
+      (item[field.key]
+        ? `https://raw.githubusercontent.com/${SITE_CONFIG.githubOwner}/${SITE_CONFIG.githubRepo}/main/frontend/${item[field.key]}`
+        : "");
+    const zoom = Number(item[field.zoomKey]) || 1;
+    const posX = item[field.xKey] ?? 50;
+    const posY = item[field.yKey] ?? 50;
+    return `
+      <label>${field.label}</label>
+      <div class="crop-field">
+        <div
+          class="crop-frame"
+          data-crop-frame
+          data-tab="${tab}"
+          data-field="${field.key}"
+          data-index="${index}"
+          data-x-key="${field.xKey}"
+          data-y-key="${field.yKey}"
+          data-zoom-key="${field.zoomKey}"
+        >${previewUrl ? `<img src="${previewUrl}" alt="" draggable="false" style="object-position:${posX}% ${posY}%; transform:scale(${zoom});">` : ""}</div>
+        <div class="crop-controls">
+          <input type="file" accept="image/*" data-action="upload-image" data-tab="${tab}" data-field="${field.key}" data-index="${index}">
+          ${item[`_${field.key}Uploading`] ? '<p class="upload-status">Laddar upp…</p>' : ""}
+          ${
+            item[field.key]
+              ? `
+            <label class="crop-zoom-label">Zoom</label>
+            <input type="range" min="1" max="2.5" step="0.05" value="${zoom}" data-action="crop-zoom" data-tab="${tab}" data-field="${field.key}" data-index="${index}" data-zoom-key="${field.zoomKey}">
+            <p class="crop-hint">Dra i bilden för att flytta den.</p>
+            <button type="button" class="link-button" data-action="remove-image" data-tab="${tab}" data-field="${field.key}" data-index="${index}">Ta bort bild</button>`
+              : ""
+          }
         </div>
       </div>`;
   }
@@ -263,6 +313,11 @@ async function handleImageUpload(tab, index, field, file) {
   const item = state.data[tab].items[index];
   item[`_${field}PreviewUrl`] = URL.createObjectURL(file);
   item[`_${field}Uploading`] = true;
+  if (fieldConfig.type === "image-crop") {
+    item[fieldConfig.zoomKey] = 1;
+    item[fieldConfig.xKey] = 50;
+    item[fieldConfig.yKey] = 50;
+  }
   renderEditor();
 
   try {
@@ -301,7 +356,14 @@ async function saveSection(tab) {
   try {
     const cleanItems = state.data[tab].items.map((item) => {
       const clean = {};
-      config.fields.forEach((field) => (clean[field.key] = item[field.key] || ""));
+      config.fields.forEach((field) => {
+        clean[field.key] = item[field.key] || "";
+        if (field.type === "image-crop" && clean[field.key]) {
+          clean[field.zoomKey] = Number(item[field.zoomKey]) || 1;
+          clean[field.xKey] = item[field.xKey] ?? 50;
+          clean[field.yKey] = item[field.yKey] ?? 50;
+        }
+      });
       return clean;
     });
     const content = utf8ToBase64(JSON.stringify(cleanItems, null, 2) + "\n");
@@ -360,8 +422,15 @@ root.addEventListener("click", (event) => {
     state.data[tab].items.splice(index, 1);
     renderEditor();
   } else if (action === "remove-image") {
-    state.data[tab].items[index][field] = "";
-    delete state.data[tab].items[index][`_${field}PreviewUrl`];
+    const item = state.data[tab].items[index];
+    item[field] = "";
+    delete item[`_${field}PreviewUrl`];
+    const fieldConfig = SECTIONS[tab].fields.find((f) => f.key === field);
+    if (fieldConfig.type === "image-crop") {
+      item[fieldConfig.zoomKey] = 1;
+      item[fieldConfig.xKey] = 50;
+      item[fieldConfig.yKey] = 50;
+    }
     renderEditor();
   } else if (action === "save-section") {
     saveSection(state.tab);
@@ -370,14 +439,67 @@ root.addEventListener("click", (event) => {
 
 root.addEventListener("input", (event) => {
   const el = event.target;
-  if (el.dataset.action !== "edit-field") return;
-  state.data[el.dataset.tab].items[Number(el.dataset.index)][el.dataset.field] = el.value;
+  if (el.dataset.action === "edit-field") {
+    state.data[el.dataset.tab].items[Number(el.dataset.index)][el.dataset.field] = el.value;
+  } else if (el.dataset.action === "crop-zoom") {
+    const item = state.data[el.dataset.tab].items[Number(el.dataset.index)];
+    item[el.dataset.zoomKey] = Number(el.value);
+    const img = el.closest(".crop-field").querySelector("[data-crop-frame] img");
+    if (img) img.style.transform = `scale(${el.value})`;
+  }
 });
 
 root.addEventListener("change", (event) => {
   const el = event.target;
   if (el.dataset.action !== "upload-image" || !el.files[0]) return;
   handleImageUpload(el.dataset.tab, Number(el.dataset.index), el.dataset.field, el.files[0]);
+});
+
+// Drag-to-pan on the crop preview. Uses pointer capture on the frame
+// itself so move/up events keep firing even once the cursor leaves it —
+// no document-level listeners to clean up.
+root.addEventListener("pointerdown", (event) => {
+  const frame = event.target.closest("[data-crop-frame]");
+  if (!frame) return;
+  const img = frame.querySelector("img");
+  if (!img) return;
+
+  const { tab, field, index, xKey, yKey, zoomKey } = frame.dataset;
+  const item = state.data[tab].items[Number(index)];
+  const drag = {
+    startClientX: event.clientX,
+    startClientY: event.clientY,
+    startX: item[xKey] ?? 50,
+    startY: item[yKey] ?? 50,
+    zoom: Number(item[zoomKey]) || 1,
+    frameSize: frame.getBoundingClientRect().width,
+  };
+
+  frame.setPointerCapture(event.pointerId);
+  frame.classList.add("dragging");
+
+  const onMove = (moveEvent) => {
+    const dx = moveEvent.clientX - drag.startClientX;
+    const dy = moveEvent.clientY - drag.startClientY;
+    const deltaXPercent = (dx / drag.frameSize) * (100 / drag.zoom);
+    const deltaYPercent = (dy / drag.frameSize) * (100 / drag.zoom);
+    const newX = clamp(drag.startX - deltaXPercent, 0, 100);
+    const newY = clamp(drag.startY - deltaYPercent, 0, 100);
+    item[xKey] = newX;
+    item[yKey] = newY;
+    img.style.objectPosition = `${newX}% ${newY}%`;
+  };
+
+  const onUp = () => {
+    frame.classList.remove("dragging");
+    frame.removeEventListener("pointermove", onMove);
+    frame.removeEventListener("pointerup", onUp);
+    frame.removeEventListener("pointercancel", onUp);
+  };
+
+  frame.addEventListener("pointermove", onMove);
+  frame.addEventListener("pointerup", onUp);
+  frame.addEventListener("pointercancel", onUp);
 });
 
 // ---------- Boot ----------

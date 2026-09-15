@@ -254,13 +254,14 @@ section { padding: 56px 0; }
 .board-member:last-child { border-bottom: none; }
 .board-initial {
   flex-shrink: 0;
-  width: 46px;
-  height: 46px;
+  width: 84px;
+  height: 84px;
   border-radius: 50%;
   background: var(--color-lavender-light);
   color: var(--color-lavender-deep);
   font-family: var(--font-display);
   font-weight: 600;
+  font-size: 1.6rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -274,10 +275,17 @@ section { padding: 56px 0; }
 }
 .board-photo {
   flex-shrink: 0;
-  width: 46px;
-  height: 46px;
+  width: 84px;
+  height: 84px;
   border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-lavender-pale);
+}
+.board-photo img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 /* Sponsor logos — a plain strip, like an "as seen in" row, not a card grid */
@@ -424,6 +432,37 @@ input, textarea {
 }
 .image-thumb img { width: 100%; height: 100%; object-fit: cover; }
 .upload-status { font-size: 0.85rem; color: var(--color-ink-soft); margin: 6px 0 0; }
+
+.crop-field { display: flex; gap: 18px; align-items: flex-start; margin-bottom: 18px; flex-wrap: wrap; }
+.crop-frame {
+  width: 140px;
+  height: 140px;
+  flex-shrink: 0;
+  border: 1px solid var(--color-line);
+  border-radius: 50%;
+  background: var(--color-lavender-pale);
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+}
+.crop-frame.dragging { cursor: grabbing; }
+.crop-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.crop-controls { flex: 1; min-width: 180px; }
+.crop-controls input[type="range"] {
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  margin-bottom: 6px;
+}
+.crop-zoom-label { font-size: 0.85rem; margin-bottom: 4px; }
+.crop-hint { font-size: 0.85rem; color: var(--color-ink-soft); margin: 0 0 10px; }
 
 .link-button {
   background: none;
