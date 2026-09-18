@@ -2,17 +2,26 @@
   {
     "name": "Elisabet Nore Evertsson",
     "role": "Ordförande",
-    "photo": "images/board/1789475656297-elisabet-nore-evertsson.jpg"
+    "photo": "images/board/1789475656297-elisabet-nore-evertsson.jpg",
+    "photoZoom": 1,
+    "photoX": 50,
+    "photoY": 50
   },
   {
     "name": "Susanne Zeeck",
     "role": "Vice ordförande",
-    "photo": "images/board/1789475662688-susanne-zeeck.jpg"
+    "photo": "images/board/1789475662688-susanne-zeeck.jpg",
+    "photoZoom": 1,
+    "photoX": 50,
+    "photoY": 50
   },
   {
     "name": "Ingegerd Ahl",
     "role": "Sekreterare",
-    "photo": "images/board/1789475671346-ingegerd-ahl.jpg"
+    "photo": "images/board/1789475671346-ingegerd-ahl.jpg",
+    "photoZoom": 1,
+    "photoX": 50,
+    "photoY": 50
   },
   {
     "name": "Robert Klinga",
@@ -22,11 +31,22 @@
   {
     "name": "Mats Lindgren",
     "role": "Ledamot",
-    "photo": "images/board/1789475682915-mats-lindgren.jpg"
+    "photo": "images/board/1789475682915-mats-lindgren.jpg",
+    "photoZoom": 1,
+    "photoX": 50,
+    "photoY": 50
   },
   {
     "name": "Krister Medin",
     "role": "Ledamot",
     "photo": ""
+  },
+  {
+    "name": "Eva Knuts",
+    "role": "Ledamot",
+    "photo": "images/board/1789717918033-eva-knuts.jpg",
+    "photoZoom": 1,
+    "photoX": 50,
+    "photoY": 50
   }
 ]
