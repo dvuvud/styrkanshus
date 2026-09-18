@@ -24,6 +24,8 @@ const SECTIONS = {
     path: "frontend/events.json",
     addLabel: "Lägg till evenemang",
     emptyLabel: "Inga evenemang inlagda ännu.",
+    titleField: "title",
+    subtitleField: "date",
     fields: [
       { key: "date", label: "Datum", type: "text", placeholder: "t.ex. 12 sep 2026" },
       { key: "title", label: "Namn", type: "text", placeholder: "Namn på evenemang" },
@@ -257,15 +259,33 @@ function fieldMarkup(tab, item, index, field) {
     <input type="text" data-action="edit-field" data-tab="${tab}" data-field="${field.key}" data-index="${index}" value="${escapeHtml(item[field.key])}" placeholder="${escapeHtml(field.placeholder)}">`;
 }
 
+function rowSummary(config, item, index) {
+  const titleField = config.titleField || config.fields[0].key;
+  const title = escapeHtml(item[titleField]) || `${config.singular} ${index + 1}`;
+  const subtitleField = config.subtitleField;
+  const subtitle = subtitleField && item[subtitleField] ? `${escapeHtml(item[subtitleField])} · ` : "";
+  return `${subtitle}${title}`;
+}
+
+// Rows start collapsed (just a summary line) so a long list of events stays
+// scannable. Editing the fields requires clicking "Redigera" first, tracked
+// per item as a transient _expanded flag that never gets saved to JSON.
 function rowMarkup(tab, config, item, index) {
-  const titleField = config.fields[0].key;
+  const expanded = !!item._expanded;
   return `
     <div class="event-row">
       <div class="event-row-head">
-        <span>${escapeHtml(item[titleField]) || `${config.singular} ${index + 1}`}</span>
-        <button type="button" class="link-button" data-action="remove-row" data-tab="${tab}" data-index="${index}">Ta bort</button>
+        <span class="event-row-title">${rowSummary(config, item, index)}</span>
+        <div class="event-row-actions">
+          <button type="button" class="link-button" data-action="toggle-row" data-tab="${tab}" data-index="${index}">${expanded ? "Stäng" : "Redigera"}</button>
+          <button type="button" class="link-button" data-action="remove-row" data-tab="${tab}" data-index="${index}">Ta bort</button>
+        </div>
       </div>
-      ${config.fields.map((field) => fieldMarkup(tab, item, index, field)).join("")}
+      ${
+        expanded
+          ? `<div class="event-row-body">${config.fields.map((field) => fieldMarkup(tab, item, index, field)).join("")}</div>`
+          : ""
+      }
     </div>`;
 }
 
@@ -424,9 +444,13 @@ root.addEventListener("click", (event) => {
     renderEditor();
   } else if (action === "add-row") {
     const config = SECTIONS[state.tab];
-    const blank = {};
+    const blank = { _expanded: true };
     config.fields.forEach((f) => (blank[f.key] = ""));
     state.data[state.tab].items.push(blank);
+    renderEditor();
+  } else if (action === "toggle-row") {
+    const item = state.data[tab].items[index];
+    item._expanded = !item._expanded;
     renderEditor();
   } else if (action === "remove-row") {
     state.data[tab].items.splice(index, 1);

@@ -397,15 +397,16 @@ input, textarea {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
-.event-row-head span {
+.event-row-title {
   font-weight: 700;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--color-lavender-deep);
+  font-size: 1rem;
+  color: var(--color-navy-deep);
 }
+.event-row-actions { display: flex; gap: 16px; flex-shrink: 0; }
+.event-row-body { margin-top: 16px; }
 .admin-tabs {
   display: flex;
   gap: 4px;

@@ -67,17 +67,93 @@ document.addEventListener("DOMContentLoaded", async () => {
       <p>Inga evenemang är inplanerade just nu. Nya tillfällen läggs upp löpande, så håll utkik här.</p>
     </div>`;
 
-  const eventCard = (event) => `
+  const PREVIEW_LENGTH = 140;
+
+  // Truncates already-rendered HTML at a text-character boundary without
+  // ever cutting inside a tag: walks the DOM (not the markup string), so
+  // bold, italic, links, and list items still render correctly in the
+  // shortened preview, and a partly-shown list just has fewer <li>s rather
+  // than broken markup.
+  const truncateHtml = (html, maxLength) => {
+    const container = document.createElement("div");
+    container.innerHTML = html;
+    const state = { remaining: maxLength, truncated: false };
+
+    const walk = (node) => {
+      if (state.remaining <= 0) return false; // caller should remove this node
+
+      if (node.nodeType === Node.TEXT_NODE) {
+        const text = node.textContent;
+        if (text.length <= state.remaining) {
+          state.remaining -= text.length;
+          return true;
+        }
+        const lastSpace = text.lastIndexOf(" ", state.remaining);
+        const cut = lastSpace > 20 ? lastSpace : state.remaining;
+        node.textContent = text.slice(0, cut) + "…";
+        state.remaining = 0;
+        state.truncated = true;
+        return true;
+      }
+
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        Array.from(node.childNodes).forEach((child) => {
+          if (state.remaining <= 0) {
+            node.removeChild(child);
+            state.truncated = true;
+          } else if (!walk(child)) {
+            node.removeChild(child);
+          }
+        });
+      }
+      return true;
+    };
+
+    walk(container);
+    return { html: container.innerHTML, truncated: state.truncated };
+  };
+
+  const eventCard = (event, index) => {
+    const fullHtml = renderRichText(event.description || "");
+    const { html: previewHtml, truncated } = truncateHtml(fullHtml, PREVIEW_LENGTH);
+    const uid = `event-desc-${index}`;
+
+    const descriptionMarkup = truncated
+      ? `
+        <div class="event-description" id="${uid}-preview">${previewHtml}</div>
+        <div class="event-description" id="${uid}-full" hidden>${fullHtml}</div>
+        <button type="button" class="link-button" data-action="toggle-description" data-target="${uid}" aria-expanded="false" aria-controls="${uid}-full">Läs mer</button>`
+      : `<div class="event-description">${fullHtml}</div>`;
+
+    return `
     <div class="card">
       <p class="eyebrow">${escapeHtml(event.date || "")}</p>
       <h3>${escapeHtml(event.title || "")}</h3>
-      <div class="event-description">${renderRichText(event.description || "")}</div>
+      ${descriptionMarkup}
       ${
         event.link
           ? `<a class="button small secondary mt-sm" href="${escapeHtml(event.link)}" target="_blank" rel="noopener">Anmäl dig</a>`
           : ""
       }
     </div>`;
+  };
+
+  const handleToggleDescription = (event) => {
+    const btn = event.target.closest('[data-action="toggle-description"]');
+    if (!btn) return;
+    const uid = btn.dataset.target;
+    const previewEl = document.getElementById(`${uid}-preview`);
+    const fullEl = document.getElementById(`${uid}-full`);
+    if (!previewEl || !fullEl) return;
+    const wasHidden = fullEl.hidden;
+    fullEl.hidden = !wasHidden;
+    previewEl.hidden = wasHidden;
+    btn.textContent = wasHidden ? "Visa mindre" : "Läs mer";
+    btn.setAttribute("aria-expanded", String(wasHidden));
+  };
+
+  if (fullList) fullList.addEventListener("click", handleToggleDescription);
+  if (preview) preview.addEventListener("click", handleToggleDescription);
 
   try {
     const response = await fetch("events.json", { cache: "no-store" });
