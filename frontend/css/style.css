@@ -69,6 +69,12 @@ h3 { font-size: 1.25rem; font-weight: 600; }
 
 p { margin: 0 0 1em; color: var(--color-ink-soft); max-width: 62ch; }
 
+/* A div, not a p: event descriptions can contain a <ul> from renderRichText,
+   and a <p> isn't allowed to contain block-level content. */
+.event-description { margin: 0 0 1em; color: var(--color-ink-soft); max-width: 62ch; }
+.event-description ul { margin: 0.5em 0; padding-left: 1.3em; }
+.event-description :last-child { margin-bottom: 0; }
+
 .eyebrow {
   font-family: var(--font-body);
   font-weight: 700;
@@ -153,9 +159,9 @@ p { margin: 0 0 1em; color: var(--color-ink-soft); max-width: 62ch; }
 }
 
 /* Six links plus the wordmark stop fitting on one row well before 780px
-   (closer to ~900px with "Kommande evenemang" in the mix) — switch to the
-   hamburger menu early enough that the row never has to overflow or wrap
-   mid-line. */
+   (closer to ~900px with "Kommande evenemang" in the mix), so switch to
+   the hamburger menu early enough that the row never has to overflow or
+   wrap mid-line. */
 @media (max-width: 960px) {
   .nav-toggle { display: inline-block; }
   .nav-links {
@@ -230,7 +236,7 @@ section { padding: 56px 0; }
   .grid-2, .grid-3 { grid-template-columns: 1fr; }
 }
 
-/* Editorial alternative to a boxed card grid — a thin rule instead of a
+/* Editorial alternative to a boxed card grid: a thin rule instead of a
    bordered/shadowed card. Used for plain informational content. */
 .feature-list {
   display: grid;
@@ -288,7 +294,7 @@ section { padding: 56px 0; }
   display: block;
 }
 
-/* Sponsor logos — a plain strip, like an "as seen in" row, not a card grid */
+/* Sponsor logos: a plain strip, like an "as seen in" row, not a card grid */
 .sponsor-strip {
   display: flex;
   flex-wrap: wrap;
@@ -476,6 +482,24 @@ input, textarea {
 }
 .rt-btn:hover { background: var(--color-lavender-pale); }
 .richtext-hint { font-size: 0.8rem; color: var(--color-ink-soft); margin: 0 0 10px; }
+.richtext-preview {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  background: var(--color-bg);
+}
+.richtext-preview-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-lavender-deep);
+  margin: 0 0 8px;
+}
+.richtext-preview-body { font-size: 0.95rem; }
+.richtext-preview-body ul { margin: 0.5em 0; padding-left: 1.3em; }
+.richtext-preview-body p:last-child { margin-bottom: 0; }
 
 .link-button {
   background: none;

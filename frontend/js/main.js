@@ -64,14 +64,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const emptyMarkup = `
     <div class="card empty-state">
-      <p>Inga evenemang är inplanerade just nu. Håll utkik här — nya tillfällen läggs upp löpande.</p>
+      <p>Inga evenemang är inplanerade just nu. Nya tillfällen läggs upp löpande, så håll utkik här.</p>
     </div>`;
 
   const eventCard = (event) => `
     <div class="card">
       <p class="eyebrow">${escapeHtml(event.date || "")}</p>
       <h3>${escapeHtml(event.title || "")}</h3>
-      <p>${renderRichText(event.description || "")}</p>
+      <div class="event-description">${renderRichText(event.description || "")}</div>
       ${
         event.link
           ? `<a class="button small secondary mt-sm" href="${escapeHtml(event.link)}" target="_blank" rel="noopener">Anmäl dig</a>`
@@ -170,21 +170,4 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-function escapeHtml(value) {
-  const div = document.createElement("div");
-  div.textContent = value;
-  return div.innerHTML;
-}
-
-// Minimal markdown-style formatting for event descriptions: **bold**,
-// *italic*, [text](url), and line breaks. Escapes the raw text first, so
-// the only HTML that can ever appear is what this function writes itself —
-// safe by construction regardless of what's typed into the admin field.
-function renderRichText(text) {
-  let html = escapeHtml(text || "");
-  html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-  html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
-  html = html.replace(/\*([^*]+)\*/g, "<em>$1</em>");
-  html = html.replace(/\n/g, "<br>");
-  return html;
-}
+// escapeHtml and renderRichText live in richtext.js, loaded before this file.

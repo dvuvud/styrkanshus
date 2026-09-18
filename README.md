@@ -6,7 +6,7 @@ small bit of server-side code for the admin login.
 
 ## Structure
 ```
-worker.js            Worker entry point — serves frontend/ and handles /api/oauth-token
+worker.js            Worker entry point. Serves frontend/ and handles /api/oauth-token
 wrangler.toml         Worker config: name, and the [assets] binding pointing at frontend/
 frontend/
   index.html         Hem
@@ -15,23 +15,24 @@ frontend/
   sponsorer.html      Sponsorer (reads sponsors.json)
   stod-oss.html       Stödj oss
   kontakt.html        Kontakta oss (contact form)
-  events.json         Upcoming events shown on the site — edit directly, or via /admin/
-  board.json          Board members and their photos — edit directly, or via /admin/
-  sponsors.json       Sponsor logos and links — edit directly, or via /admin/
+  events.json         Upcoming events shown on the site. Edit directly, or via /admin/
+  board.json          Board members and their photos. Edit directly, or via /admin/
+  sponsors.json       Sponsor logos and links. Edit directly, or via /admin/
   images/board/       Board member photos uploaded from /admin/
   images/sponsors/    Sponsor logos uploaded from /admin/
   robots.txt          Keeps /admin/ out of search engines
   css/style.css       All styling, colors/fonts as CSS variables at the top
   js/config.js        The one file you edit to activate the form and the admin login
+  js/richtext.js      Shared text formatting, used by both main.js and admin.js
   js/main.js          Nav toggle, contact form, events/board/sponsors rendering
   admin/              Hidden page (not linked anywhere) for editing all of the above in-browser
 ```
-No `.github/workflows` — Cloudflare's own **Workers Builds** connects
+No `.github/workflows`. Cloudflare's own **Workers Builds** connects
 straight to this GitHub repo (see below) and redeploys automatically on
 every push, both the site and the admin login's server-side piece together.
 
 ## Contact form
-Wired to Web3Forms and already active — the key lives in
+Wired to Web3Forms and already active. The key lives in
 `frontend/js/config.js` (`web3formsAccessKey`). If it's ever removed, the
 form falls back to showing "Formuläret aktiveras inom kort" instead of
 letting people submit it. Get a new key at https://web3forms.com/ if needed.
@@ -40,21 +41,22 @@ letting people submit it. Get a new key at https://web3forms.com/ if needed.
 Events, board members, and sponsors each live in their own JSON file
 (`events.json`, `board.json`, `sponsors.json`), and the pages that show them
 render straight from those files. You can edit them by hand, or use the
-admin page so the board can do it themselves from a browser — including
+admin page so the board can do it themselves from a browser, including
 uploading a new board photo or sponsor logo, which lands in
 `images/board/` or `images/sponsors/` and is picked automatically.
 
-Event descriptions support light formatting — bold, italic, and links —
-either by selecting text and clicking a toolbar button, or by typing
-`**bold**`, `*italic*`, and `[text](https://...)` directly. It's a small
-hand-written parser rather than a full rich-text editor library, kept
-deliberately simple to match the rest of the site. Events also have an
-optional `link` field (an "Anmäl dig" button appears on the card
-automatically when it's set) — leave it blank for events that don't need
-registration.
+Event descriptions support light formatting: bold, italic, links, and
+bullet lists, either by selecting text and clicking a toolbar button, or
+by typing `**bold**`, `*italic*`, `[text](https://...)`, and lines starting
+with `- ` or `* ` directly. There's a live preview under the field showing
+how it'll actually look on the site. It's a small hand-written parser
+rather than a full rich-text editor library, kept deliberately simple to
+match the rest of the site. Events also have an optional `link` field (an
+"Anmäl dig" button appears on the card automatically when it's set); leave
+it blank for events that don't need registration.
 
 Board and sponsor entries have a file picker for their photo/logo (5 MB
-max) — it uploads as soon as you pick a file, and "Spara" then publishes
+max). It uploads as soon as you pick a file, and "Spara" then publishes
 the JSON pointing at it. Replacing a photo uploads a new file rather than
 overwriting the old one, so an unused image occasionally gets left behind;
 harmless, just prune it from GitHub every so often if it bothers you.
@@ -63,11 +65,11 @@ Board photos also get a crop editor: drag the preview to reposition it and
 use the zoom slider to get closer, so a photo that's framed wider than the
 circle doesn't cut off part of someone's face. That's stored as
 `photoZoom`/`photoX`/`photoY` alongside `photo` in `board.json` (all
-optional — a plain `photo` path with none of those still displays fine,
+optional; a plain `photo` path with none of those still displays fine,
 just centered with no zoom).
 
 `frontend/admin/index.html` isn't linked from the site's navigation, but
-it's still a public URL once deployed (e.g. `https://<your-site>/admin/`) —
+it's still a public URL once deployed (e.g. `https://<your-site>/admin/`).
 `robots.txt` just keeps search engines from indexing it. Access is controlled
 by GitHub itself, not by hiding the URL: a person can log in with any GitHub
 account, but saving only works if that account has write access to this
@@ -80,15 +82,15 @@ the one step GitHub requires off-browser: exchanging the login code for an
 access token (GitHub's token endpoint sends no CORS headers, so the browser
 can't call it directly either). `worker.js` handles that one route
 (`/api/oauth-token`) itself and serves every other request straight from
-`frontend/` via the `ASSETS` binding in `wrangler.toml` — same-origin, no
+`frontend/` via the `ASSETS` binding in `wrangler.toml`, same-origin, no
 CORS handling needed. This is why the project has to be a **Worker** (with
-a static-assets binding), not the older Pages product — a project that's
+a static-assets binding), not the older Pages product: a project that's
 static assets only, with no attached script, can't have variables/secrets
 added to it, which is the error you ran into.
 
 1. **Make sure the Worker has this repo's code**
    - The Worker name in the Cloudflare dashboard must match `name` in
-     `wrangler.toml` (currently `styrkanshus`) — rename one or the other so
+     `wrangler.toml` (currently `styrkanshus`); rename one or the other so
      they match exactly.
    - That Worker → **Settings → Builds → Connect** → pick this GitHub repo,
      production branch `main`, root directory = repository root (where
@@ -105,13 +107,13 @@ added to it, which is the error you ran into.
      (e.g. `https://styrkanshus.<your-subdomain>.workers.dev/admin/`)
    - Save, then copy the **Client ID** and generate a **Client secret**.
 
-3. **Set `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`** — these go in two
+3. **Set `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`.** These go in two
    different places, not both in the dashboard:
    - `GITHUB_CLIENT_ID` (from step 2) goes in **`wrangler.toml`**, in the
-     `[vars]` block, committed to git. It's not secret — it's already
+     `[vars]` block, committed to git. It's not secret; it's already
      public in the GitHub login URL. This matters because Workers Builds
      runs `wrangler deploy` on every push, which treats `wrangler.toml` as
-     the *complete* set of plain variables — anything added only through
+     the *complete* set of plain variables, and anything added only through
      the dashboard gets wiped on the next deploy. (If you added it via the
      dashboard and it kept disappearing, this is why.)
    - `GITHUB_CLIENT_SECRET` (from step 2) goes in the **Cloudflare
@@ -123,13 +125,13 @@ added to it, which is the error you ran into.
    ```js
    githubOAuthClientId: "<client id from step 2>",
    ```
-   Same value as `GITHUB_CLIENT_ID` in `wrangler.toml` — both need it
-   (the frontend uses it to build the GitHub login URL; the Worker uses it
-   again server-side to complete the token exchange).
+   Same value as `GITHUB_CLIENT_ID` in `wrangler.toml`; both need it
+   (the frontend uses it to build the GitHub login URL, and the Worker uses
+   it again server-side to complete the token exchange).
 
 5. Add any board members who should be able to publish changes as
    collaborators on this GitHub repository.
 
-That's it — visiting `/admin/` now offers a "Logga in med GitHub" button.
+That's it: visiting `/admin/` now offers a "Logga in med GitHub" button.
 The client secret lives only in the Worker's encrypted variables, never in
 this repo.

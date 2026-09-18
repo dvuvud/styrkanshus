@@ -1,5 +1,5 @@
 // Site configuration. Fill in the values below to activate the contact
-// form and the events admin page — see README.md for step-by-step setup.
+// form and the events admin page. See README.md for step-by-step setup.
 const SITE_CONFIG = {
   // Web3Forms access key (https://web3forms.com/). Leave blank to keep
   // the contact form disabled.

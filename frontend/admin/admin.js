@@ -1,16 +1,16 @@
 // Content admin page: lets a logged-in GitHub collaborator edit events,
-// the board list, and sponsor logos, and publish straight to the repo —
-// no code, no going through anyone else.
+// the board list, and sponsor logos, and publish straight to the repo.
+// No code, no going through anyone else.
 //
 // Auth: GitHub OAuth (Authorization Code flow). The one step that can't
-// happen in the browser — exchanging the code for a token, since GitHub's
-// token endpoint has no CORS support — is delegated to a same-origin
+// happen in the browser, exchanging the code for a token, since GitHub's
+// token endpoint has no CORS support, is delegated to a same-origin
 // route handled by the Cloudflare Worker itself (see /worker.js at the
 // repo root). Everything else talks to api.github.com directly, which
 // does support CORS for authenticated requests.
 //
 // Access control: anyone with a GitHub account can log in, but only
-// accounts with write access to this repository can actually publish —
+// accounts with write access to this repository can actually publish.
 // GitHub itself rejects the save otherwise. There's no separate password
 // or allowlist to maintain here.
 
@@ -133,11 +133,7 @@ function fileToBase64(file) {
   });
 }
 
-function escapeHtml(value) {
-  const div = document.createElement("div");
-  div.textContent = value || "";
-  return div.innerHTML;
-}
+// escapeHtml and renderRichText live in richtext.js, loaded before this file.
 
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
@@ -181,12 +177,6 @@ function renderLoading(text) {
 }
 
 function fieldMarkup(tab, item, index, field) {
-  if (field.type === "textarea") {
-    return `
-      <label>${field.label}</label>
-      <textarea rows="3" data-action="edit-field" data-tab="${tab}" data-field="${field.key}" data-index="${index}" placeholder="${escapeHtml(field.placeholder)}">${escapeHtml(item[field.key])}</textarea>`;
-  }
-
   if (field.type === "richtext") {
     const btn = (format, label) =>
       `<button type="button" class="rt-btn" data-action="rt-format" data-format="${format}" data-tab="${tab}" data-field="${field.key}" data-index="${index}">${label}</button>`;
@@ -196,9 +186,14 @@ function fieldMarkup(tab, item, index, field) {
         ${btn("bold", "<strong>Fet</strong>")}
         ${btn("italic", "<em>Kursiv</em>")}
         ${btn("link", "Länk")}
+        ${btn("list", "Lista")}
       </div>
       <textarea rows="4" data-action="edit-field" data-tab="${tab}" data-field="${field.key}" data-index="${index}" placeholder="${escapeHtml(field.placeholder)}">${escapeHtml(item[field.key])}</textarea>
-      <p class="richtext-hint">Markera text och klicka på en knapp för att formatera — eller skriv **fet**, *kursiv* och [text](länk) direkt.</p>`;
+      <p class="richtext-hint">Markera text och klicka på en knapp för att formatera. Du kan också skriva **fet text**, *kursiv text*, [text](länk) och punktlistor med "- " i början av raden direkt.</p>
+      <div class="richtext-preview">
+        <p class="richtext-preview-label">Så här ser det ut på sidan</p>
+        <div class="richtext-preview-body">${renderRichText(item[field.key] || "")}</div>
+      </div>`;
   }
 
   if (field.type === "image") {
@@ -453,34 +448,51 @@ root.addEventListener("click", (event) => {
     if (!textarea) return;
     applyRichTextFormat(textarea, target.dataset.format);
     state.data[tab].items[index][field] = textarea.value;
+    updateRichTextPreview(row, textarea.value);
   } else if (action === "save-section") {
     saveSection(state.tab);
   }
 });
 
+// Updates the "Så här ser det ut på sidan" preview under a richtext field.
+function updateRichTextPreview(row, value) {
+  const previewBody = row?.querySelector(".richtext-preview-body");
+  if (previewBody) previewBody.innerHTML = renderRichText(value);
+}
+
 // Wraps the current textarea selection in simple markdown-style syntax
 // (**bold**, *italic*, [text](url)) rather than opening a full WYSIWYG
-// editor — kept deliberately lightweight to avoid adding the site's first
+// editor. Kept deliberately lightweight to avoid adding the site's first
 // external dependency for what's usually a two-sentence event blurb.
 function applyRichTextFormat(textarea, format) {
   const { value, selectionStart, selectionEnd } = textarea;
   const selected = value.slice(selectionStart, selectionEnd);
+
+  if (format === "list") {
+    const lines = (selected || "Skriv din listpunkt här").split("\n");
+    const bulleted = lines.map((line) => `- ${line.replace(/^\s*[-*]\s+/, "")}`).join("\n");
+    textarea.value = value.slice(0, selectionStart) + bulleted + value.slice(selectionEnd);
+    textarea.focus();
+    textarea.setSelectionRange(selectionStart, selectionStart + bulleted.length);
+    return;
+  }
+
   let before = "";
   let after = "";
   let placeholder = "text";
 
   if (format === "bold") {
     before = after = "**";
-    placeholder = "fet text";
+    placeholder = "Skriv din feta text här";
   } else if (format === "italic") {
     before = after = "*";
-    placeholder = "kursiv text";
+    placeholder = "Skriv din kursiva text här";
   } else if (format === "link") {
     const url = window.prompt("Länkadress:", "https://");
     if (!url) return;
     before = "[";
     after = `](${url})`;
-    placeholder = "länktext";
+    placeholder = "Skriv din länktext här";
   }
 
   const content = selected || placeholder;
@@ -493,6 +505,7 @@ root.addEventListener("input", (event) => {
   const el = event.target;
   if (el.dataset.action === "edit-field") {
     state.data[el.dataset.tab].items[Number(el.dataset.index)][el.dataset.field] = el.value;
+    if (el.tagName === "TEXTAREA") updateRichTextPreview(el.closest(".event-row"), el.value);
   } else if (el.dataset.action === "crop-zoom") {
     const item = state.data[el.dataset.tab].items[Number(el.dataset.index)];
     item[el.dataset.zoomKey] = Number(el.value);
@@ -508,8 +521,8 @@ root.addEventListener("change", (event) => {
 });
 
 // Drag-to-pan on the crop preview. Uses pointer capture on the frame
-// itself so move/up events keep firing even once the cursor leaves it —
-// no document-level listeners to clean up.
+// itself so move/up events keep firing even once the cursor leaves it.
+// No document-level listeners to clean up.
 root.addEventListener("pointerdown", (event) => {
   const frame = event.target.closest("[data-crop-frame]");
   if (!frame) return;

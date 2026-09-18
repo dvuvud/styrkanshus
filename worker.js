@@ -4,7 +4,7 @@
 // page's GitHub login.
 //
 // GitHub's token endpoint (github.com/login/oauth/access_token) doesn't
-// send CORS headers, so the browser can't call it directly — this runs
+// send CORS headers, so the browser can't call it directly. This runs
 // server-side instead. It's same-origin with the rest of the site, so no
 // CORS handling is needed here.
 //
