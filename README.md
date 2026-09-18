@@ -44,6 +44,15 @@ admin page so the board can do it themselves from a browser — including
 uploading a new board photo or sponsor logo, which lands in
 `images/board/` or `images/sponsors/` and is picked automatically.
 
+Event descriptions support light formatting — bold, italic, and links —
+either by selecting text and clicking a toolbar button, or by typing
+`**bold**`, `*italic*`, and `[text](https://...)` directly. It's a small
+hand-written parser rather than a full rich-text editor library, kept
+deliberately simple to match the rest of the site. Events also have an
+optional `link` field (an "Anmäl dig" button appears on the card
+automatically when it's set) — leave it blank for events that don't need
+registration.
+
 Board and sponsor entries have a file picker for their photo/logo (5 MB
 max) — it uploads as soon as you pick a file, and "Spara" then publishes
 the JSON pointing at it. Replacing a photo uploads a new file rather than
