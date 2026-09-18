@@ -71,7 +71,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     <div class="card">
       <p class="eyebrow">${escapeHtml(event.date || "")}</p>
       <h3>${escapeHtml(event.title || "")}</h3>
-      <p>${escapeHtml(event.description || "")}</p>
+      <p>${renderRichText(event.description || "")}</p>
+      ${
+        event.link
+          ? `<a class="button small secondary mt-sm" href="${escapeHtml(event.link)}" target="_blank" rel="noopener">Anmäl dig</a>`
+          : ""
+      }
     </div>`;
 
   try {
@@ -169,4 +174,17 @@ function escapeHtml(value) {
   const div = document.createElement("div");
   div.textContent = value;
   return div.innerHTML;
+}
+
+// Minimal markdown-style formatting for event descriptions: **bold**,
+// *italic*, [text](url), and line breaks. Escapes the raw text first, so
+// the only HTML that can ever appear is what this function writes itself —
+// safe by construction regardless of what's typed into the admin field.
+function renderRichText(text) {
+  let html = escapeHtml(text || "");
+  html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+  html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  html = html.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+  html = html.replace(/\n/g, "<br>");
+  return html;
 }

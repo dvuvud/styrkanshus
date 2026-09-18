@@ -27,7 +27,8 @@ const SECTIONS = {
     fields: [
       { key: "date", label: "Datum", type: "text", placeholder: "t.ex. 12 sep 2026" },
       { key: "title", label: "Namn", type: "text", placeholder: "Namn på evenemang" },
-      { key: "description", label: "Beskrivning", type: "textarea", placeholder: "Vad händer, var och för vem?" },
+      { key: "description", label: "Beskrivning", type: "richtext", placeholder: "Vad händer, var och för vem?" },
+      { key: "link", label: "Anmälningslänk (valfritt)", type: "text", placeholder: "https://…" },
     ],
   },
   board: {
@@ -184,6 +185,20 @@ function fieldMarkup(tab, item, index, field) {
     return `
       <label>${field.label}</label>
       <textarea rows="3" data-action="edit-field" data-tab="${tab}" data-field="${field.key}" data-index="${index}" placeholder="${escapeHtml(field.placeholder)}">${escapeHtml(item[field.key])}</textarea>`;
+  }
+
+  if (field.type === "richtext") {
+    const btn = (format, label) =>
+      `<button type="button" class="rt-btn" data-action="rt-format" data-format="${format}" data-tab="${tab}" data-field="${field.key}" data-index="${index}">${label}</button>`;
+    return `
+      <label>${field.label}</label>
+      <div class="richtext-toolbar">
+        ${btn("bold", "<strong>Fet</strong>")}
+        ${btn("italic", "<em>Kursiv</em>")}
+        ${btn("link", "Länk")}
+      </div>
+      <textarea rows="4" data-action="edit-field" data-tab="${tab}" data-field="${field.key}" data-index="${index}" placeholder="${escapeHtml(field.placeholder)}">${escapeHtml(item[field.key])}</textarea>
+      <p class="richtext-hint">Markera text och klicka på en knapp för att formatera — eller skriv **fet**, *kursiv* och [text](länk) direkt.</p>`;
   }
 
   if (field.type === "image") {
@@ -432,10 +447,47 @@ root.addEventListener("click", (event) => {
       item[fieldConfig.yKey] = 50;
     }
     renderEditor();
+  } else if (action === "rt-format") {
+    const row = target.closest(".event-row");
+    const textarea = row?.querySelector(`textarea[data-field="${field}"]`);
+    if (!textarea) return;
+    applyRichTextFormat(textarea, target.dataset.format);
+    state.data[tab].items[index][field] = textarea.value;
   } else if (action === "save-section") {
     saveSection(state.tab);
   }
 });
+
+// Wraps the current textarea selection in simple markdown-style syntax
+// (**bold**, *italic*, [text](url)) rather than opening a full WYSIWYG
+// editor — kept deliberately lightweight to avoid adding the site's first
+// external dependency for what's usually a two-sentence event blurb.
+function applyRichTextFormat(textarea, format) {
+  const { value, selectionStart, selectionEnd } = textarea;
+  const selected = value.slice(selectionStart, selectionEnd);
+  let before = "";
+  let after = "";
+  let placeholder = "text";
+
+  if (format === "bold") {
+    before = after = "**";
+    placeholder = "fet text";
+  } else if (format === "italic") {
+    before = after = "*";
+    placeholder = "kursiv text";
+  } else if (format === "link") {
+    const url = window.prompt("Länkadress:", "https://");
+    if (!url) return;
+    before = "[";
+    after = `](${url})`;
+    placeholder = "länktext";
+  }
+
+  const content = selected || placeholder;
+  textarea.value = value.slice(0, selectionStart) + before + content + after + value.slice(selectionEnd);
+  textarea.focus();
+  textarea.setSelectionRange(selectionStart + before.length, selectionStart + before.length + content.length);
+}
 
 root.addEventListener("input", (event) => {
   const el = event.target;
