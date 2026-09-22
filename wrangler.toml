@@ -5,6 +5,12 @@ compatibility_date = "2026-08-29"
 [assets]
 directory = "./frontend"
 binding = "ASSETS"
+# By default Cloudflare serves a request that matches a real file (nearly
+# every page on this site) straight from the edge, without ever running
+# worker.js. That's what silently skipped the http-to-https redirect for
+# every real page while it worked fine on a made-up path. run_worker_first
+# makes worker.js run first for every request, always.
+run_worker_first = true
 
 # Not secret. The client ID is already public (it's visible in the GitHub
 # login URL), so it's safe to commit here. This has to be declared in
