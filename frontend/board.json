@@ -2,7 +2,7 @@
   {
     "name": "Elisabet Nore Evertsson",
     "role": "Ordförande",
-    "photo": "images/board/1789475656297-elisabet-nore-evertsson.jpg",
+    "photo": "images/board/1793970324141-elisabet-nore-evertsson.png",
     "photoZoom": 1,
     "photoX": 50,
     "photoY": 50
@@ -20,21 +20,24 @@
     "role": "Sekreterare",
     "photo": "images/board/1789475671346-ingegerd-ahl.jpg",
     "photoZoom": 1,
-    "photoX": 50,
-    "photoY": 50
+    "photoX": 54.64564732142857,
+    "photoY": 3.480747767857146
   },
   {
     "name": "Robert Klinga",
     "role": "Kassör",
-    "photo": ""
+    "photo": "images/board/1793970294697-robert-klinga.png",
+    "photoZoom": 1,
+    "photoX": 50,
+    "photoY": 50
   },
   {
     "name": "Mats Lindgren",
     "role": "Ledamot",
     "photo": "images/board/1789475682915-mats-lindgren.jpg",
     "photoZoom": 1,
-    "photoX": 50,
-    "photoY": 50
+    "photoX": 49.49776785714286,
+    "photoY": 18.987165178571427
   },
   {
     "name": "Krister Medin",
@@ -46,7 +49,7 @@
     "role": "Ledamot",
     "photo": "images/board/1789717918033-eva-knuts.jpg",
     "photoZoom": 1,
-    "photoX": 50,
-    "photoY": 50
+    "photoX": 2.9506138392857153,
+    "photoY": 16.40276227678571
   }
 ]
